@@ -1,18 +1,16 @@
 package org.example;
 
+import com.oracle.webservices.internal.api.databinding.DatabindingMode;
+import lombok.*;
+
+
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class Character {
     int health = 1000;
     int level = 1;
     boolean alive = true;
-
-    public Character() {
-    }
-
-    public Character(int health, int level, boolean alive) {
-        this.health = health;
-        this.level = level;
-        this.alive = alive;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -33,14 +31,15 @@ public class Character {
         }
     }
 
-    public void cura(Character curato, int cura) throws Exception {
+    public void cura(Character curato, int cura) {
         if (curato.alive) {
             curato.health += cura;
             if (curato.health > 1000) {
                 curato.health = 1000;
             }
         }
-        else throw new Exception("Errore il personaggio è morto");
+        else throw new RuntimeException("Errore il personaggio è morto");
+
     }
 
 

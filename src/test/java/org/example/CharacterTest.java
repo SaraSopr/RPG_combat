@@ -3,6 +3,7 @@ package org.example;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterTest {
@@ -39,7 +40,7 @@ class CharacterTest {
     }
 
     @Test
-    void calcolaHealth_curaDiUnPersonaggio_risultatoHealthMaggioreMaMinoredi1000() throws Exception {
+    void calcolaHealth_curaDiUnPersonaggio_risultatoHealthMaggioreMaMinoredi1000() {
         Character curante = new Character();
         Character curato = new Character(100, 1, true);
         curante.cura(curato, 100);
@@ -47,11 +48,15 @@ class CharacterTest {
     }
 
     @Test
-    void calcolaHealth_curaDiUnPersonaggioMorto_errore() throws Exception {
+    void calcolaHealth_curaDiUnPersonaggioMorto_errore() {
         Character curante = new Character();
         Character curato = new Character(0, 1, false);
-        curante.cura(curato, 100);
-        assertThat(curato).isEqualTo("Errore il personaggio è morto");
+
+        assertThatThrownBy(() -> {
+            curante.cura(curato, 100);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Errore il personaggio è morto");
+
     }
 
 }
