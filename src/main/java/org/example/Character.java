@@ -24,4 +24,12 @@ public class Character {
                 this.alive == that.alive;
 
     }
+
+    public void combattimento(Character difesa, int danno){
+        difesa.health = difesa.health - danno;
+        if (difesa.health <= 0)
+            difesa.alive = false;
+    }
+
+
 }
