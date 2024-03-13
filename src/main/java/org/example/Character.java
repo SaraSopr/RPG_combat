@@ -3,6 +3,7 @@ package org.example;
 import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import lombok.*;
 
+import static java.lang.Math.min;
 
 
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class Character {
                 this.alive == that.alive;
 
     }
-
+/*
     public void combattimento(Character difesa, int danno){
         if (this.hashCode()==difesa.hashCode())
             throw new RuntimeException("Errore non si può auto-attaccarsi");
@@ -42,14 +43,12 @@ public class Character {
         if (this.hashCode() != curato.hashCode())
             throw new IllegalArgumentException("Errore non è possibile curare qualcun altro, solo sè stessi");
         if (curato.alive) {
-            curato.health += cura;
-            if (curato.health > 1000) {
-                curato.health = 1000;
-            }
+            int nuovaHealth = min(curato.health + cura, 1000);
+            curato.health = nuovaHealth;
         }
         else throw new RuntimeException("Errore il personaggio è morto");
 
     }
 
-
+*/
 }
