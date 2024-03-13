@@ -31,13 +31,27 @@ class CharacterTest {
     }
 
     @Test
-    void calcoladanno_combattimentoTraDuePersonaggi_risultatoHealthPersonaggioMorto(){
+    void calcoladanno_combattimentoTraDuePersonaggi_risultatoHealthUgualeAZeroPersonaggioMorto(){
         Character attacco = new Character();
         Character difesa = new Character();
         attacco.combattimento(difesa, 1100);
-
-        assertThat(difesa).isEqualTo(new Character(-100, 1, false));
+        assertThat(difesa).isEqualTo(new Character(0, 1, false));
     }
 
+    @Test
+    void calcolaHealth_curaDiUnPersonaggio_risultatoHealthMaggioreMaMinoredi1000() throws Exception {
+        Character curante = new Character();
+        Character curato = new Character(100, 1, true);
+        curante.cura(curato, 100);
+        assertThat(curato).isEqualTo(new Character(200, 1, true));
+    }
+
+    @Test
+    void calcolaHealth_curaDiUnPersonaggioMorto_errore() throws Exception {
+        Character curante = new Character();
+        Character curato = new Character(0, 1, false);
+        curante.cura(curato, 100);
+        assertThat(curato).isEqualTo("Errore il personaggio è morto");
+    }
 
 }

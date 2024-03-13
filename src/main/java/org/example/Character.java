@@ -27,8 +27,20 @@ public class Character {
 
     public void combattimento(Character difesa, int danno){
         difesa.health = difesa.health - danno;
-        if (difesa.health <= 0)
+        if (difesa.health <= 0) {
+            difesa.health = 0;
             difesa.alive = false;
+        }
+    }
+
+    public void cura(Character curato, int cura) throws Exception {
+        if (curato.alive) {
+            curato.health += cura;
+            if (curato.health > 1000) {
+                curato.health = 1000;
+            }
+        }
+        else throw new Exception("Errore il personaggio è morto");
     }
 
 
