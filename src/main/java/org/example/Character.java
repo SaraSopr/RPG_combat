@@ -24,6 +24,13 @@ public class Character {
     }
 
     public void combattimento(Character difesa, int danno){
+        if (this.hashCode()==difesa.hashCode())
+            throw new RuntimeException("Errore non si può auto-attaccarsi");
+        if (this.level-difesa.level>=5){
+            danno = danno / 2;
+        } else if (difesa.level - this.level >= 5){
+            danno = danno + (danno/2);
+        }
         difesa.health = difesa.health - danno;
         if (difesa.health <= 0) {
             difesa.health = 0;
@@ -32,6 +39,8 @@ public class Character {
     }
 
     public void cura(Character curato, int cura) {
+        if (this.hashCode() != curato.hashCode())
+            throw new IllegalArgumentException("Errore non è possibile curare qualcun altro, solo sè stessi");
         if (curato.alive) {
             curato.health += cura;
             if (curato.health > 1000) {

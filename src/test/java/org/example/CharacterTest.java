@@ -41,22 +41,56 @@ class CharacterTest {
 
     @Test
     void calcolaHealth_curaDiUnPersonaggio_risultatoHealthMaggioreMaMinoredi1000() {
-        Character curante = new Character();
         Character curato = new Character(100, 1, true);
-        curante.cura(curato, 100);
+        curato.cura(curato, 100);
         assertThat(curato).isEqualTo(new Character(200, 1, true));
     }
 
     @Test
     void calcolaHealth_curaDiUnPersonaggioMorto_errore() {
-        Character curante = new Character();
         Character curato = new Character(0, 1, false);
 
         assertThatThrownBy(() -> {
-            curante.cura(curato, 100);
+            curato.cura(curato, 100);
         }).isInstanceOf(RuntimeException.class)
                 .hasMessage("Errore il personaggio è morto");
 
     }
+
+    @Test
+    void calcolaHealth_attaccoASeStesso_errore(){
+        Character attacco = new Character();
+        assertThatThrownBy(() -> {
+            attacco.combattimento(attacco, 100);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Errore non si può auto-attaccarsi");
+    }
+
+    @Test
+    void calcolaHealth_curaAqualcunaltro_errore(){
+        Character curante = new Character();
+        Character curato = new Character();
+        assertThatThrownBy(() -> {
+            curante.cura(curato, 100);
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Errore non è possibile curare qualcun altro, solo sè stessi");
+    }
+
+    @Test
+    void calcolaHealth_attaccoDifferenzaLivelloDiPiuDi5_riduzione50PercAttacco(){
+        Character attacco = new Character(700, 10, true);
+        Character difesa = new Character(800, 4, true);
+        attacco.combattimento(difesa, 400);
+        assertThat(difesa).isEqualTo(new Character(600, 4, true));
+    }
+
+    @Test
+    void calcolaHealth_difesaDifferenzaLivelloDiPiuDi5_riduzione50PercAttacco(){
+        Character attacco = new Character(700, 4, true);
+        Character difesa = new Character(800, 10, true);
+        attacco.combattimento(difesa, 100);
+        assertThat(difesa).isEqualTo(new Character(650, 10, true));
+    }
+
 
 }
