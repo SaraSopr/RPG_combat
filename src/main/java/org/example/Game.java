@@ -1,8 +1,5 @@
 package org.example;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -19,21 +16,26 @@ public class Game {
 
     }
 
-    public static void combattimento(Character attacco,Character difesa, int danno){
+    public static void combattimento(Character attacco, Character difesa, int danno, int distanza){
         checkAttacco(attacco, difesa);
+        if (!isInRange(distanza, attacco)) return;
         danno = getDanno(danno, attacco.level - difesa.level);
         difesa.health = max(difesa.health - danno, 0);
         if (difesa.health == 0)
             difesa.alive = false;
     }
 
+    private static boolean isInRange(int distanza, Character attacco) {
+        return attacco.type.getRange() >= distanza;
+    }
+
     private static int getDanno(int danno, int differenzaLivello) {
-        int mezzoDanno = danno / 2;
+        int metaDanno = danno / 2;
         if (differenzaLivello >= 5){
-            return mezzoDanno;
+            return metaDanno;
         }
         else if (differenzaLivello <= -5){
-            return danno + mezzoDanno;
+            return danno + metaDanno;
         }
         return danno;
     }

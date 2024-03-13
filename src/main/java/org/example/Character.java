@@ -12,6 +12,13 @@ public class Character {
     int health = 1000;
     int level = 1;
     boolean alive = true;
+    Type type = Type.MELEE;
+
+    public Character(int health, int level, boolean alive) {
+        this.health = health;
+        this.level = level;
+        this.alive = alive;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -51,4 +58,18 @@ public class Character {
     }
 
 */
+
+    public enum Type {
+        MELEE(2),
+        RANGED(20);
+        final int range;
+
+        public int getRange() {
+            return range;
+        }
+
+        Type(int range) {
+            this.range = range;
+        }
+    }
 }

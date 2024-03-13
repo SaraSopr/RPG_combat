@@ -17,7 +17,7 @@ class GameTest {
     void calcoladanno_combattimentoTraDuePersonaggi_risultatoHealth(){
         Character attacco = new Character();
         Character difesa = new Character();
-        Game.combattimento(attacco, difesa, 300);
+        Game.combattimento(attacco, difesa, 300, 2);
         assertThat(difesa.health).isEqualTo(700);
     }
 
@@ -25,7 +25,7 @@ class GameTest {
     void calcoladanno_combattimentoTraDuePersonaggi_risultatoHealthPersonaggioVivo(){
         Character attacco = new Character();
         Character difesa = new Character();
-        Game.combattimento(attacco, difesa, 300);
+        Game.combattimento(attacco, difesa, 300, 2);
 
         assertThat(difesa).isEqualTo(new Character(700, 1, true));
     }
@@ -34,7 +34,7 @@ class GameTest {
     void calcoladanno_combattimentoTraDuePersonaggi_risultatoHealthUgualeAZeroPersonaggioMorto(){
         Character attacco = new Character();
         Character difesa = new Character();
-        Game.combattimento(attacco, difesa, 1100);
+        Game.combattimento(attacco, difesa, 1100, 2);
         assertThat(difesa).isEqualTo(new Character(0, 1, false));
     }
 
@@ -60,7 +60,7 @@ class GameTest {
     void calcolaHealth_attaccoASeStesso_errore(){
         Character attacco = new Character();
         assertThatThrownBy(() -> {
-            Game.combattimento(attacco, attacco, 100);
+            Game.combattimento(attacco, attacco, 100, 2);
         }).isInstanceOf(RuntimeException.class)
                 .hasMessage("Errore non si può auto-attaccarsi");
     }
@@ -79,7 +79,7 @@ class GameTest {
     void calcolaHealth_attaccoDifferenzaLivelloDiPiuDi5_riduzione50PercAttacco(){
         Character attacco = new Character(700, 10, true);
         Character difesa = new Character(800, 4, true);
-        Game.combattimento(attacco, difesa, 400);
+        Game.combattimento(attacco, difesa, 400, 2);
         assertThat(difesa).isEqualTo(new Character(600, 4, true));
     }
 
@@ -87,9 +87,43 @@ class GameTest {
     void calcolaHealth_difesaDifferenzaLivelloDiPiuDi5_riduzione50PercAttacco(){
         Character attacco = new Character(700, 4, true);
         Character difesa = new Character(800, 10, true);
-        Game.combattimento(attacco, difesa, 100);
+        Game.combattimento(attacco, difesa, 100, 2);
         assertThat(difesa).isEqualTo(new Character(650, 10, true));
     }
+
+    @Test
+    void calcolaHealth_distanzaTraIDuePersonaggiMaggioreDiRange_nessunaModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.MELEE);
+        Character difesa = new Character(800, 10, true, Character.Type.MELEE);
+        Game.combattimento(attacco, difesa, 100, 3);
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(800, 10, true, Character.Type.MELEE));
+    }
+
+    @Test
+    void calcolaHealth_distanzaTraIDuePersonaggiUgualeARange_ModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.MELEE);
+        Character difesa = new Character(800, 10, true, Character.Type.MELEE);
+        Game.combattimento(attacco, difesa, 100, 2);
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(700, 10, true, Character.Type.MELEE));
+    }
+
+    @Test
+    void calcolaHealth_distanzaTraIDuePersonaggiUgualeARangeTypeRanged_ModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.RANGED);
+        Character difesa = new Character(800, 10, true, Character.Type.RANGED);
+        Game.combattimento(attacco, difesa, 100, Character.Type.RANGED.getRange());
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(700, 10, true, Character.Type.RANGED));
+    }
+
+    @Test
+    void calcolaHealth_distanzaTraIDuePersonaggiMaggioreDiRangeTypeRanged_ModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.RANGED);
+        Character difesa = new Character(800, 10, true, Character.Type.RANGED);
+        Game.combattimento(attacco, difesa, 100, Character.Type.RANGED.getRange()+1);
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(800, 10, true, Character.Type.RANGED));
+    }
+
+
 
 
 }
