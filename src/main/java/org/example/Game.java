@@ -62,4 +62,9 @@ public class Game {
     }
 
 
+    public static void attaccoAunaCosa(Thing thing, int danno) {
+        thing.health = max(thing.health - danno, 0);
+        thing.destroyed = thing.health == 0 ? true : thing.destroyed;
+
+    }
 }

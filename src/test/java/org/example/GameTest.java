@@ -176,4 +176,19 @@ class GameTest {
                 .hasMessage("Errore non è possibile curare qualcun altro, solo sè stessi o un alleato");
     }
 
+    @Test
+    void calcolaHealth_attaccoDiCharacterAunaCosa_diminuzioneHealthCosa(){
+        Thing thing = new Thing("albero", 1000, false);
+        Character character = new Character(100, 1, true, Character.Type.RANGED);
+        Game.attaccoAunaCosa(thing, 500);
+        assertThat(thing).usingRecursiveComparison().isEqualTo(new Thing("albero", 500, false));
+    }
+
+    @Test
+    void calcolaHealth_attaccoDiCharacterAunaCosa_MortedellaCosa(){
+        Thing thing = new Thing("albero", 1000, false);
+        Game.attaccoAunaCosa(thing, 1000);
+        assertThat(thing).usingRecursiveComparison().isEqualTo(new Thing("albero", 0, true));
+    }
+
 }
