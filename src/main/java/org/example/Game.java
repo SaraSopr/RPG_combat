@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.List;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -19,10 +21,19 @@ public class Game {
     public static void combattimento(Character attacco, Character difesa, int danno, int distanza){
         checkAttacco(attacco, difesa);
         if (!isInRange(distanza, attacco)) return;
+        if (isAlleati(attacco.faction, difesa.faction)) return;
         danno = getDanno(danno, attacco.level - difesa.level);
         difesa.health = max(difesa.health - danno, 0);
         if (difesa.health == 0)
             difesa.alive = false;
+    }
+
+    private static boolean isAlleati(List<String> faction_attacco, List<String> faction_difesa) {
+        for (String s : faction_difesa) {
+            if (faction_attacco.contains(s))
+                return true;
+        }
+        return false;
     }
 
     private static boolean isInRange(int distanza, Character attacco) {
@@ -46,8 +57,8 @@ public class Game {
     }
 
     private static void checkCura(Character curatore, Character curato) {
-        if (curatore.hashCode() != curato.hashCode())
-            throw new IllegalArgumentException("Errore non è possibile curare qualcun altro, solo sè stessi");
+        if ((curatore.hashCode() != curato.hashCode()) && !isAlleati(curatore.faction, curato.faction))
+            throw new IllegalArgumentException("Errore non è possibile curare qualcun altro, solo sè stessi o un alleato");
     }
 
 

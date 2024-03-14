@@ -2,6 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -72,7 +73,7 @@ class GameTest {
         assertThatThrownBy(() -> {
             Game.cura(curante, curato, 100);
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Errore non è possibile curare qualcun altro, solo sè stessi");
+                .hasMessage("Errore non è possibile curare qualcun altro, solo sè stessi o un alleato");
     }
 
     @Test
@@ -123,7 +124,56 @@ class GameTest {
         assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(800, 10, true, Character.Type.RANGED));
     }
 
+    @Test
+    void calcolaHealth_combattimentoTraDueAlleati_NessunaModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.RANGED);
+        attacco.addFactions("rossi");
+        Character difesa = new Character(800, 10, true, Character.Type.RANGED);
+        difesa.addFactions("rossi");
+        Game.combattimento(attacco, difesa, 100, Character.Type.RANGED.getRange());
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(800, 10, true, Character.Type.RANGED, asList("rossi")));
+    }
 
+    @Test
+    void calcolaHealth_combattimentoTraDueAlleati_NonModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.RANGED);
+        attacco.addFactions("rossi");
+        Character difesa = new Character(800, 10, true, Character.Type.RANGED);
+        difesa.addFactions("rossi");
+        Game.combattimento(attacco, difesa, 100, Character.Type.RANGED.getRange());
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(800, 10, true, Character.Type.RANGED, asList("rossi")));
+    }
 
+    @Test
+    void calcolaHealth_combattimentoTraDueNonAlleati_ModificaHealth(){
+        Character attacco = new Character(700, 10, true, Character.Type.RANGED);
+        attacco.addFactions("rossi");
+        Character difesa = new Character(800, 10, true, Character.Type.RANGED);
+        difesa.addFactions("verdi");
+        Game.combattimento(attacco, difesa, 100, Character.Type.RANGED.getRange());
+        assertThat(difesa).usingRecursiveComparison().isEqualTo(new Character(700, 10, true, Character.Type.RANGED, asList("verdi")));
+    }
+
+    @Test
+    void calcolaHealth_curaTraDueAlleati_ModificaHealth(){
+        Character curato = new Character(100, 1, true, Character.Type.RANGED);
+        curato.addFactions("rossi");
+        Character curante = new Character(100, 1, true, Character.Type.RANGED);
+        curante.addFactions("rossi");
+        Game.cura(curante, curato, 100);
+        assertThat(curato).isEqualTo(new Character(200, 1, true, Character.Type.RANGED, asList("rossi")));
+    }
+
+    @Test
+    void calcolaHealth_curaTraDueNonAlleati_Errore(){
+        Character curato = new Character(100, 1, true, Character.Type.RANGED);
+        curato.addFactions("rossi");
+        Character curante = new Character(100, 1, true, Character.Type.RANGED);
+        curante.addFactions("verdi");
+        assertThatThrownBy(() -> {
+            Game.cura(curante, curato, 100);
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Errore non è possibile curare qualcun altro, solo sè stessi o un alleato");
+    }
 
 }

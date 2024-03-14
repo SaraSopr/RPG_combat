@@ -3,6 +3,9 @@ package org.example;
 import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.min;
 
 
@@ -13,6 +16,14 @@ public class Character {
     int level = 1;
     boolean alive = true;
     Type type = Type.MELEE;
+    List<String> faction = new ArrayList<>();
+
+    public Character(int health, int level, boolean alive, Type type) {
+        this.health = health;
+        this.level = level;
+        this.alive = alive;
+        this.type = type;
+    }
 
     public Character(int health, int level, boolean alive) {
         this.health = health;
@@ -29,6 +40,10 @@ public class Character {
                 this.level == that.level &&
                 this.alive == that.alive;
 
+    }
+
+    public void addFactions(String fazione) {
+        this.faction.add(fazione);
     }
 /*
     public void combattimento(Character difesa, int danno){
